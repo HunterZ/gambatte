@@ -1,16 +1,35 @@
 import subprocess
 
-cflags   = ARGUMENTS.get('CFLAGS', '-Wall -Wextra -O2 -fomit-frame-pointer')
-cxxflags = ARGUMENTS.get('CXXFLAGS', cflags + ' -fno-exceptions -fno-rtti')
-vars = Variables()
-vars.Add('CC')
-vars.Add('CXX')
+#cflags   = ARGUMENTS.get('CFLAGS', '-Wall -Wextra -O2 -fomit-frame-pointer')
+#cxxflags = ARGUMENTS.get('CXXFLAGS', cflags + ' -fno-exceptions -fno-rtti')
+#vars = Variables()
+#vars.Add('CC')
+#vars.Add('CXX')
+#
+#env = Environment(CPPPATH = ['src', '../libgambatte/include', '../common'],
+#                  CFLAGS = cflags,
+#                  CXXFLAGS = cxxflags,
+#                  CPPDEFINES = [ 'HAVE_STDINT_H', None ],
+#                  variables = vars)
+import os
+env = Environment(ENV = os.environ)
 
-env = Environment(CPPPATH = ['src', '../libgambatte/include', '../common'],
-                  CFLAGS = cflags,
-                  CXXFLAGS = cxxflags,
-                  CPPDEFINES = [ 'HAVE_STDINT_H', None ],
-                  variables = vars)
+env['AR']      = 'arm-wiz-linux-gnu-ar'
+env['AS']      = 'arm-wiz-linux-gnu-as'
+env['CC']      = 'arm-wiz-linux-gnu-gcc'
+env['CXX']     = 'arm-wiz-linux-gnu-g++'
+env['LD']      = 'arm-wiz-linux-gnu-ld'
+env['LINK']    = 'arm-wiz-linux-gnu-g++'
+#env['LINK']    = 'arm-wiz-linux-gnu-ld'
+env['OBJCOPY'] = 'arm-wiz-linux-gnu-objcopy'
+env['RANLIB']  = 'arm-wiz-linux-gnu-ranlib'
+env['STRIP']   = 'arm-wiz-linux-gnu-strip'
+
+env['CCFLAGS']    = ['-Wall', '-Wextra', '-O2', '-fomit-frame-pointer']
+env['CXXFLAGS']   = ['-fno-exceptions', '-fno-rtti']
+env['CPPDEFINES'] = ['-DHAVE_STDINT_H']
+env['CPPPATH']    = ['#src', '#../libgambatte/include', '#../common', '/opt/hmnwiz/include']
+
 env.ParseConfig('sdl-config --cflags --libs')
 
 sourceFiles = Split('''

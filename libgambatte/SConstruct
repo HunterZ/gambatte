@@ -1,14 +1,33 @@
-global_cflags = ARGUMENTS.get('CFLAGS', '-Wall -Wextra -O2 -fomit-frame-pointer')
-global_cxxflags = ARGUMENTS.get('CXXFLAGS', global_cflags + ' -fno-exceptions -fno-rtti')
-global_defines = ' -DHAVE_STDINT_H'
-vars = Variables()
-vars.Add('CC')
-vars.Add('CXX')
+#global_cflags = ARGUMENTS.get('CFLAGS', '-Wall -Wextra -O2 -fomit-frame-pointer')
+#global_cxxflags = ARGUMENTS.get('CXXFLAGS', global_cflags + ' -fno-exceptions -fno-rtti')
+#global_defines = ' -DHAVE_STDINT_H'
+#vars = Variables()
+#vars.Add('CC')
+#vars.Add('CXX')
+#
+#env = Environment(CPPPATH = ['src', 'include', '../common'],
+#                  CFLAGS = global_cflags + global_defines,
+#                  CXXFLAGS = global_cxxflags + global_defines,
+#                  variables = vars)
 
-env = Environment(CPPPATH = ['src', 'include', '../common'],
-                  CFLAGS = global_cflags + global_defines,
-                  CXXFLAGS = global_cxxflags + global_defines,
-                  variables = vars)
+import os
+env = Environment(ENV = os.environ)
+
+env['AR']      = 'arm-wiz-linux-gnu-ar'
+env['AS']      = 'arm-wiz-linux-gnu-as'
+env['CC']      = 'arm-wiz-linux-gnu-gcc'
+env['CXX']     = 'arm-wiz-linux-gnu-g++'
+env['LD']      = 'arm-wiz-linux-gnu-ld'
+#env['LINK']    = 'arm-wiz-linux-gnu-g++'
+env['LINK']    = 'arm-wiz-linux-gnu-ld'
+env['OBJCOPY'] = 'arm-wiz-linux-gnu-objcopy'
+env['RANLIB']  = 'arm-wiz-linux-gnu-ranlib'
+env['STRIP']   = 'arm-wiz-linux-gnu-strip'
+
+env['CCFLAGS']    = ['-Wall', '-Wextra', '-O2', '-fomit-frame-pointer']
+env['CXXFLAGS']   = ['-fno-exceptions', '-fno-rtti']
+env['CPPDEFINES'] = ['-DHAVE_STDINT_H']
+env['CPPPATH']    = ['#src', '#include', '#../common', '/opt/hmnwiz/include']
 
 sourceFiles = Split('''
 			src/bitmap_font.cpp
